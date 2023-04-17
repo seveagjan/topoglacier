@@ -4,14 +4,13 @@
 library(sf)
 library(raster)
 library(terra)
-library(rgdal)
-library(gdalUtils)
+library(viridis)
 
 
 
 
 
-### plot AOI outlines: Hohe Tauern Nationalpark
+### plot AOI outlines: Hohe Tauern Nationalpark (NPHT)
 
 setwd("/Volumes/satdata/uni_wuerzburg/Programming/topoglacier_data")
 aoi <- st_read("npht_agrenze_wgs84.shp")
@@ -96,12 +95,25 @@ sum(rgi_npht_glacier$AREA) # unit = sqkm
 (sum(values(surfaceice2013_mask$binary_icecover == 1), na.rm = TRUE)*900) / 1000000
 
 
-### load SRTM DEM data
+### load 10m resolution DEM data for NPHT (Digitales Geländemodell Österreich)
 
-
-
+npht_dem <- terra::rast("dem10.tif")
+plot(npht_dem, col = terrain.colors(255))
 
 ### terrain analysis
+
+# slope gradient
+
+npht_slope <- terrain(npht_dem, v = "slope", unit = "degrees")
+plot(npht_slope, col = viridis(255))
+
+# slope aspect
+
+npht_aspect <- terrain(npht_dem, v = "aspect", unit = "degrees")
+plot(npht_aspect, col = rainbow(8))
+
+
+
 
 
 
