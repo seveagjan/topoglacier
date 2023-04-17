@@ -6,4 +6,29 @@ This code showcases the analysis of the glacier retreat in the Nationalpark Hohe
 
 ### Research findings
 
-The project showed that elevation and glacier size are major controlling variables of glacier retreat in this alpine study region. Ice loss was observed at all kinds of glacier surface gradients and orientations. Especially large valley glaciers showed high area losses of ice surface. The Pasterze glacier in the center of the Nationalpark Hohe Tauern revealed by far the highest ice loss of more than 3 sqkm between 2013 and 2022. In total, about 47 sqkm of glacier area vanished in the national park within the last ten years, representing almost one third of the overall glaciated area. In a future with unbraked climate change, glaciers might only prevail at higher elevations in sun-averted sites. However, this study region extents not even to 4000 m a.s.l. and even the size of an individual glacier can not mitigate this trend.
+The project showed that elevation and glacier size are major controlling variables of glacier retreat in this alpine study region. Ice loss was observed for all kinds of glacier surface gradients and orientations. Especially large valley glaciers showed high area losses of ice surface. The Pasterze glacier in the center of the Nationalpark Hohe Tauern revealed by far the highest ice loss of more than three sqkm between 2013 and 2022. In total, about 47 sqkm of glacier area vanished in the national park within the last ten years, representing almost one third of the overall glaciated area. In a future with unbraked climate change, glaciers might only prevail at higher elevations in sun-averted sites. However, this study region extents not even to 4000 m a.s.l. and even the size of an individual glacier can not mitigate the trend of rapid ice surface loss.
+
+
+### Data sources
+
+- Landsat:
+
+Provider: USGS Earth Explorer, https://earthexplorer.usgs.gov
+Datasets: LC08_L2SP_192027_20130803_20200912_02_T1_SR, LC09_L2SP_192027_20220719_20230407_02_T1_SR
+
+- DEM:
+
+Digital Terrain Model (10m pixel resolution) based on Airborne Laserscanning campaigns in 2015
+Provider: Land Kärnten, https://www.data.gv.at/katalog/dataset/land-ktn_digitales-gelandemodell-dgm-osterreich#additional-info
+
+
+For reproducing this code, please download the underlying data from this drive folder: 
+
+https://drive.google.com/drive/folders/1IaOcQfjZmdpw7T9kBoGklxxvr7kW3uIT?usp=share_link 
+
+
+
+
+
+
+
