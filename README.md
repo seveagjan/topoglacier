@@ -2,7 +2,7 @@
 
 ### Research objectives
 
-This code showcases the analysis of the glacier retreat in the Nationalpark Hohe Tauern in Austria between 2013 and 2022 with Landsat-8 summer season data within the programming environment R. In addition to that, the project aims to reveal the extent of topographic control on ice loss in the study region by applying a logistic regression model with terrain indices as predictors of ice loss. The ice loss was further correlated with the size of individual glaciers in a last step.
+This code showcases the analysis of the glacier retreat in the Nationalpark Hohe Tauern in Austria between 2013 and 2022 with Landsat summer season data within the programming environment R. In addition to that, the project aims to reveal the extent of topographic control on ice loss in the study region by applying a logistic regression model with terrain indices as predictors of ice loss. The ice loss was further correlated with the size of individual glaciers in a last step.
 
 ### Research findings
 
