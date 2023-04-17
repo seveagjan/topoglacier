@@ -223,16 +223,17 @@ plot(rgi_glacier_iceloss_sf[6])
 
 # plot ice loss against glacier size
 
-ggplot(rgi_glacier_iceloss, aes(x = AREA, y = iceloss_sum.arealoss)) +
+plot2 <- ggplot(rgi_glacier_iceloss, aes(x = AREA, y = iceloss_sum.arealoss)) +
   geom_point(size = 1, col = "lightblue") +
   labs(title = "Relationship between glacier ice loss (2013-2022) and glacier size (2003)",
-       subtitle = "Nationalpark Hoher Tauern, Austria",
+       subtitle = "Nationalpark Hohe Tauern, Austria",
        x="glacier size (sqkm)",
        y="ice loss (sqkm) ") + 
   theme(axis.title.x = element_text(margin = margin(t = 20))) +
   theme(axis.title.y = element_text(margin = margin(r = 20))) +
   xlim(0,8) + ylim(0,2.25) + 
   geom_smooth(method = 'lm', formula = y~x, col = "black", linewidth = 0.1)
+plot2
 
 # calculate rsq for glacier size and ice loss
 
