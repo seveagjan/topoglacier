@@ -86,11 +86,11 @@ plot(surfaceice2022_mask)
 
 # validation area value
 
-sum(rgi_npht_glacier$AREA) # unit = sqkm 
+print(paste0("RGI glacier extent: ", sum(rgi_npht_glacier$AREA))) # unit = sqkm
 
 # NDSI-based area value
 
-(sum(values(surfaceice2013_mask$binary_icecover == 1), na.rm = TRUE)*900) / 1000000
+print(paste0("NDSI-based glacier extent: ", (sum(values(surfaceice2013_mask$binary_icecover == 1), na.rm = TRUE)*900) / 1000000))
 
 
 ### terrain analysis
