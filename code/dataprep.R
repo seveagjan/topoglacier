@@ -7,9 +7,6 @@ library(terra)
 library(viridis)
 
 
-
-
-
 ### plot AOI outlines: Hohe Tauern Nationalpark (NPHT)
 
 setwd("/Volumes/satdata/uni_wuerzburg/Programming/topoglacier_data")
@@ -40,6 +37,7 @@ plotRGB(l8_2013_aoi, r=3, g=2, b=1, scale= 50000)
 
 l8_2022_aoi <- terra::trim(mask(lc08_2022, aoi))
 plotRGB(l8_2022_aoi, r=3, g=2, b=1, scale= 50000)
+
 
 ### mapping of ice surfaces
 
@@ -95,12 +93,12 @@ sum(rgi_npht_glacier$AREA) # unit = sqkm
 (sum(values(surfaceice2013_mask$binary_icecover == 1), na.rm = TRUE)*900) / 1000000
 
 
-### load 10m resolution DEM data for NPHT (Digitales Geländemodell Österreich)
+### terrain analysis
+
+#load 10m resolution DEM data for NPHT (Digitales Geländemodell Österreich)
 
 npht_dem <- terra::rast("dem10.tif")
 plot(npht_dem, col = terrain.colors(255))
-
-### terrain analysis
 
 # slope gradient
 
