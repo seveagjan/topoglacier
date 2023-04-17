@@ -63,7 +63,7 @@ rgi_npht_glacier <- st_read("rgi_npht.shp")
 rgi_npht_glacier <- st_transform(rgi_npht_glacier, crs = crs(lc08_2013))
 
 npht_glacier_ndsi2013 <- terra::extract(l8_2013_aoi_ndsi, rgi_npht_glacier, fun = mean, na.rm = TRUE, df = TRUE)
-mean(npht_glacier_ndsi2013$NDSI) # threshold of 0.4 is chosen, comparable to literature (see https://doi.org/10.5194/tc-12-1629-2018)
+print(paste0("Average NDSI for RGI outlines: ", mean(npht_glacier_ndsi2013$NDSI))) # threshold of 0.4 is chosen, comparable to literature (see https://doi.org/10.5194/tc-12-1629-2018)
 
 ndsithreshold <- function(x) {
   m <-  c(-1, 0.4, 0,

@@ -15,6 +15,7 @@
 
 library(readr)
 library(caret)
+library(ggplot2)
 
 ### change detection - mapping of areal ice loss
 
@@ -195,5 +196,46 @@ mean(samples.pred == training$ice_loss) # success rate
 
 # apply new model with only one predictor shows whether the others disturb model performance depending on deviation between different models 
 
-predict(samples.fit, newdata=data.frame(elevation=c(3492, 2940)), type="response") 
+predict(samples.fit, newdata=data.frame(elevation=c(3492, 2940)), type="response")
+
+
+
+
+### Examine ice loss for individual glaciers and determine the potential role of glacier size
+
+## calculate individual glacier area loss
+
+rgi_npht_glacier <- rgi_npht_glacier[, -c(3,4,5,8,9,11,12,13,14)] # exclude redundant columns
+
+for (i in 1:length(rgi_npht_glacier)) {
+  iceloss_sum <- terra::extract(iceloss, rgi_npht_glacier, fun = sum, na.rm = TRUE)
+} # extract number of pixels within RGI glaciers that show ice loss between 2013 and 2022
+
+iceloss_sum <- as.data.frame(iceloss_sum)
+iceloss_sum$arealoss <- (iceloss_sum$binary_icecover * 900) / 1000000 # convert number of pixels to area
+
+rgi_glacier_iceloss <- cbind(rgi_npht_glacier, iceloss_sum$arealoss) # add ice loss to RGI spatial polygon data
+
+# plot spatial polygons colored by area loss
+
+rgi_glacier_iceloss_sf <- st_as_sf(rgi_glacier_iceloss)
+plot(rgi_glacier_iceloss_sf[6])
+
+# plot ice loss against glacier size
+
+ggplot(rgi_glacier_iceloss, aes(x = AREA, y = iceloss_sum.arealoss)) +
+  geom_point(size = 1, col = "lightblue") +
+  labs(title = "Relationship between glacier ice loss (2013-2022) and glacier size (2003)",
+       subtitle = "Nationalpark Hoher Tauern, Austria",
+       x="glacier size (sqkm)",
+       y="ice loss (sqkm) ") + 
+  theme(axis.title.x = element_text(margin = margin(t = 20))) +
+  theme(axis.title.y = element_text(margin = margin(r = 20))) +
+  xlim(0,8) + ylim(0,2.25) + 
+  geom_smooth(method = 'lm', formula = y~x, col = "black", linewidth = 0.1)
+
+# calculate rsq for glacier size and ice loss
+
+rsq <- function (x, y) cor(x, y) ^ 2 # function with rsq formula
+print(paste0("R2 glacier size, ice loss: ", rsq(rgi_glacier_iceloss$AREA, rgi_glacier_iceloss$iceloss_sum.arealoss)))
 
