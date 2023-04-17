@@ -92,6 +92,12 @@ hist(iceloss_aspect,
 
 ## Logistic Regression Model 
 
+# create grid of random sample points
+
+# extract topographic parameters (explanatory variable) and binary ice cover loss value (response variable)
+
+# perform prediction between each explanatory variable and response variable 
+
 
 
 
