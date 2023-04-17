@@ -1,6 +1,6 @@
 ### data preparation ###
 
-### load required libraries
+### load required packages
 library(sf)
 library(raster)
 library(terra)
