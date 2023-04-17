@@ -21,6 +21,11 @@ Datasets: LC08_L2SP_192027_20130803_20200912_02_T1_SR, LC09_L2SP_192027_20220719
 Digital Terrain Model (10m pixel resolution) based on Airborne Laserscanning campaigns in 2015
 Provider: Land Kärnten, https://www.data.gv.at/katalog/dataset/land-ktn_digitales-gelandemodell-dgm-osterreich#additional-info
 
+- RGI glacier inventory: 
+
+Outlines of mountain glaciers in Central Europe.
+Provider: RGI Consortium, https://www.glims.org/RGI/
+
 
 For reproducing this code, please download the underlying data from this drive folder: 
 
