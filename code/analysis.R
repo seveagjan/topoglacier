@@ -13,7 +13,8 @@
 
 ### load required packages
 
-
+library(readr)
+library(caret)
 
 ### change detection - mapping of areal ice loss
 
@@ -58,8 +59,8 @@ plot(iceloss_aspect, col = rainbow(8))
 
 # zonal statistics
 
-iceloss_elevation <- terra::resample(iceloss_elevation, iceloss_slope)
-terrain_metrics <- terra::rast(list(iceloss_elevation, iceloss_slope, iceloss_aspect))
+iceloss_elevation <- terra::resample(iceloss_elevation, iceloss_slope) # adjust extent of elevation raster
+terrain_metrics <- terra::rast(list(iceloss_elevation, iceloss_slope, iceloss_aspect)) # create stack of terrain metrics
 
 for (i in 1:length(terrain_metrics)) {
   
@@ -73,7 +74,7 @@ for (i in 1:length(terrain_metrics)) {
   colnames(df_terrain_iceloss) <- c("id","elevation", "slope", "aspect")
   df_terrain_iceloss <- df_terrain_iceloss[, -1]
 
-}
+} # extract statistics for terrain metrics within ice loss areas
 
 df_terrain_iceloss
 
@@ -90,21 +91,109 @@ hist(iceloss_aspect,
      main = "distribution of slope aspect (degrees) across areas of glacier ice loss", breaks = 100, col = "darkgreen")
 
 
-## Logistic Regression Model 
-
-# create grid of random sample points
-
-# extract topographic parameters (explanatory variable) and binary ice cover loss value (response variable)
-
-# perform prediction between each explanatory variable and response variable 
 
 
+### Logistic Regression Model 
+
+## create grid of random sample points
+
+creategrid <- function(cellsize) {
+  
+  # the grid is created by producing a raster layer that matches the extent of the AOI. The resolution of 
+  # the raster layer determines the cell size of the grid and can be set with the function.
+  # the glaciated area from 2013 is used as an extent for the grid, so that both ice loss and persistent ice areas are sampled
+  
+  r <- raster(ncol = 3339, nrow = 1428, xmn = 278925, xmx = 379095, ymn = 5194005, ymx = 5236845) # AOI extent
+  res(r) <- cellsize
+  crs(r) <- crs(iceloss_vector)
+  values(r) <- 1:ncell(r)
+  r_terra <- terra::rast(r)
+  surfaceice2013_mask[surfaceice2013_mask == 0] <- NA 
+  icemask2013_vec <- terra::as.polygons(surfaceice2013_mask, dissolve = TRUE)
+  r_masked <- crop(r_terra, icemask2013_vec, mask = T)
+  grid_polys <- terra::as.polygons(r_masked, dissolve = FALSE)
+  grid_polys_sf <- st_as_sf(grid_polys)
+  centroids <- st_centroid(grid_polys_sf)
+  
+}
+
+grid <- creategrid(500) # apply the grid function by setting cell size
+
+## extract topographic parameters (explanatory variable) and binary ice cover loss value (response variable)
+
+iceloss[is.na(iceloss[])] <- 0 
+
+sampling <- function(x) {
+  extract(x, grid, method = "simple", buffer = NULL)
+} # function to extract raster values for grid points
+
+sample_iceloss <- sampling(iceloss) # sample response variable
+sample_elevation <- sampling(npht_dem) # sample explanatory variables
+sample_slope <- sampling(npht_slope)
+sample_aspect <- sampling(npht_aspect)
+
+samples <- cbind(sample_iceloss,
+                 sample_elevation,
+                 sample_slope,
+                 sample_aspect)
+samples <- samples[, -c(3,5,7)]
+colnames(samples) <- c("id","ice_loss", "elevation", "slope", "aspect")
+samples <- na.omit(samples) # final samples for logistic regression model
 
 
+## perform logistic regression model
+
+# create plot that illustrates the relationship between response and explanatory variables
+
+plot <- ggplot(data = samples, aes(x = elevation, y = slope, col = as.factor(ice_loss))) +
+  geom_point(size = 1) +
+  xlab("elevation (m a.s.l.") + ylab("slope (degrees)") +
+  scale_color_discrete(name = "ice loss")
+plot
+
+# create a training and testing dataset out of the samples
+
+inTrain <- createDataPartition(y = samples$ice_loss, p = .60, list = FALSE)
+training <- samples[inTrain,]
+testing <- samples[-inTrain,]
+
+dim(training)
+dim(testing)
+
+# Fit the logistic regression model with the training data
+
+samples.fit = glm(ice_loss ~ elevation + slope + aspect, data=training, family=binomial)
+summary(samples.fit) # gives overview of model fit (predictor significance: high z-value, low p-value)
+
+# test model performance against testing data
+
+samples.prob = predict(samples.fit, testing, type="response")
+samples.pred = rep("0", dim(training)[1])
+samples.pred[samples.prob > .5] = "1"
+table(samples.pred, training$ice_loss) # confusion matrix
+
+mean(samples.pred == training$ice_loss) # prediction success rate
+1 - mean(samples.pred == training$ice_loss) # error rate
+
+# apply model to new data
+
+predict(samples.fit, newdata=data.frame(
+  elevation = c(3492, 2940), slope = c(24, 7), aspect = c(244, 180)), type="response")
 
 
+samples.fit = glm(ice_loss ~ elevation, data=training, family=binomial) 
+summary(samples.fit) # model fit
 
+# compute confusion matrix of new model, should be similar to original model
 
+samples.prob = predict(samples.fit, testing, type="response")
+samples.pred = rep("0", dim(training)[1])
+samples.pred[samples.prob > .5] = "1"
+table(samples.pred, training$ice_loss)
 
+mean(samples.pred == training$ice_loss) # success rate
 
+# apply new model with only one predictor shows whether the others disturb model performance depending on deviation between different models 
+
+predict(samples.fit, newdata=data.frame(elevation=c(3492, 2940)), type="response") 
 
