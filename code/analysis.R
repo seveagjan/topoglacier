@@ -215,15 +215,16 @@ iceloss_sum <- as.data.frame(iceloss_sum)
 iceloss_sum$arealoss <- (iceloss_sum$binary_icecover * 900) / 1000000 # convert number of pixels to area
 
 rgi_glacier_iceloss <- cbind(rgi_npht_glacier, iceloss_sum$arealoss) # add ice loss to RGI spatial polygon data
+rgi_glacier_iceloss$lossperc <- rgi_glacier_iceloss$iceloss_sum.arealoss / rgi_glacier_iceloss$AREA
 
 # plot spatial polygons colored by area loss
 
 rgi_glacier_iceloss_sf <- st_as_sf(rgi_glacier_iceloss)
-plot(rgi_glacier_iceloss_sf[6])
+plot(rgi_glacier_iceloss_sf[8])
 
 # plot ice loss against glacier size
 
-plot2 <- ggplot(rgi_glacier_iceloss, aes(x = AREA, y = iceloss_sum.arealoss)) +
+plot2 <- ggplot(rgi_glacier_iceloss, aes(x = AREA, y = lossperc)) +
   geom_point(size = 1, col = "lightblue") +
   labs(title = "Relationship between glacier ice loss (2013-2022) and glacier size (2003)",
        subtitle = "Nationalpark Hohe Tauern, Austria",
@@ -231,12 +232,12 @@ plot2 <- ggplot(rgi_glacier_iceloss, aes(x = AREA, y = iceloss_sum.arealoss)) +
        y="ice loss (sqkm) ") + 
   theme(axis.title.x = element_text(margin = margin(t = 20))) +
   theme(axis.title.y = element_text(margin = margin(r = 20))) +
-  xlim(0,8) + ylim(0,2.25) + 
+  xlim(0,8) + ylim(0,1) + 
   geom_smooth(method = 'lm', formula = y~x, col = "black", linewidth = 0.1)
 plot2
 
 # calculate rsq for glacier size and ice loss
 
 rsq <- function (x, y) cor(x, y) ^ 2 # function with rsq formula
-print(paste0("R2 glacier size, ice loss: ", rsq(rgi_glacier_iceloss$AREA, rgi_glacier_iceloss$iceloss_sum.arealoss)))
+print(paste0("R2 glacier size, ice loss: ", rsq(rgi_glacier_iceloss$AREA, rgi_glacier_iceloss$lossperc)))
 
