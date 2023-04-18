@@ -11,6 +11,11 @@ The project showed that elevation and glacier size are major controlling variabl
 
 ### Data sources
 
+- Study area:
+
+Outlines as ESRI shapefile Nationalpark Hohe Tauern
+Provider: Land Tirol, https://www.data.gv.at/katalog/dataset/land-tirol_auengrenzenationalparkhohetauern/resource/437810c6-a076-44e3-850a-aa39a57e2908 
+
 - Landsat:
 
 Provider: USGS Earth Explorer, https://earthexplorer.usgs.gov
@@ -29,7 +34,7 @@ Provider: RGI Consortium, https://www.glims.org/RGI/
 
 For reproducing this code, please download the underlying data from this drive folder: 
 
-https://drive.google.com/drive/folders/1IaOcQfjZmdpw7T9kBoGklxxvr7kW3uIT?usp=share_link 
+https://drive.google.com/drive/folders/1rnIvi--eobp9g-lOKM9WCwFiBHEmr-g8?usp=share_link 
 
 
 
